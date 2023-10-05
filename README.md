@@ -2,7 +2,7 @@
 
 ## Requirements
 1. NodeJS
-2. NPM packages: `discord.js-selfbot-v13 expresss socket.io axios dotenv`
+2. NPM packages: `discord.js-selfbot-v13 expresss socket.io axios dotenv cors`
 3. Common sense
 
 ## Instructions
