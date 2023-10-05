@@ -83,7 +83,7 @@ const client = new Client({
 })
 
 server.listen(port, () => {
-	console.log(`server running: localhost:${port}`)
+	console.log(`Please go to localhost:${port} on your browser after client is ready`)
 });
 
 let activeGuild;
