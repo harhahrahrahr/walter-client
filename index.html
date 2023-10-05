@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: "Poppins", sans-serif;
+		}
+		img {
+			user-select: none !important;
+		}
+		html {
+			background: #121212;
+			overflow: hidden;
+		}
+		#guild-sidebar {
+			float: right;
+			display: flex;
+			flex-direction: column;
+			overflow-y: scroll !important;
+			height: 100vh;
+			background: #2F3135;
+			user-select: none;
+			padding: 0.25em;
+			width: 6%;
+		}
+		#guild-sidebar > img {
+			width: 100%;
+			height: 100%;
+			cursor: pointer;
+			transition: all 500ms;
+			border-radius: 1.5em;
+		}
+		#guild-sidebar > img:hover {
+			border-radius: 0.5em;
+		}
+		*::-webkit-scrollbar {
+			width: 10px;
+			background: #ACA9BB;
+			border-radius: 1.5em;
+		}
+		*::-webkit-scrollbar-thumb {
+			width: 10px;
+			background: #464362;
+			border-radius: 1.5em;
+		}
+		#message-container {
+			overflow-y: scroll !important;
+			height: 100vh;
+			color: rgb(25, 25, 25);
+			padding-left: 1em;
+			padding-bottom: 3em;
+			font-size: 20px;
+			word-break: break-word;
+		}
+		#message-input {
+			font-size: 16px;
+			position: fixed;
+			bottom: 8px;
+			left: 8px;
+			padding: 12px;
+			width: 80.5%;
+			border-radius: 1.5em;
+			outline: solid 3px rgb(25, 25, 25);
+			border: none;
+			backdrop-filter: blur(25px);
+			background: none;
+			color: #fff;
+		}
+		#message-container > .message {
+			display: flex;
+			padding: 0.15em;
+			margin-top: 4px;
+			color: rgb(245, 245, 245);
+			user-select: auto;
+		}
+		.messageTextContent {
+			padding-left: 6px;
+			position: relative;
+			top: 6px;
+			left: 1px;
+		}
+		.messageUsername {
+			background: #272533;
+			color: #D7F4F1;
+			border-radius: 0.25em;
+			cursor: pointer;
+			user-select: none;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 3px;
+			border: solid 3px #384457;
+			background-clip: border-box;
+		}
+		#message-username-popup {
+			font-size: 20px;
+			background: #4A6361;
+			color: #fff;
+			position: absolute;
+			bottom: 0;
+			left: -10px;
+			z-index: 4;
+			transition: all 200ms;
+			pointer-events: none;
+			padding: 3px;
+			border-radius: 0.5em;
+			border-radius: rgb;
+			border: solid 3px rgb(35 43 19);
+			height: 3ch;
+		}
+		.message-delimiter {
+			pointer-events: none;
+			user-select: none;
+			position: relative;
+			top: 6px;
+		}
+		.messagelogger-status-deleted {
+			color: #B80000;
+			position: relative;
+			top: 6px;
+			left: 4.5px;
+		}
+		.messagelogger-status-edited {
+			color: #66BAA8;
+			position: relative;
+			top: 6px;
+			left: 4.25px;
+		}
+		.messagelogger-status-old {
+			color: #FFC771;
+			position: relative;
+			top: 6px;
+			left: 1.25px;
+		}
+		.user-details-box {
+			color: #fff;
+			width: 30%;
+			height: 40%;
+			position: absolute;
+			top: 0;
+			right: 0;
+			border: solid 4px #464362;
+		}
+		.messagelogger-old-message {
+			color: lightslategray;
+			position: relative;
+			top: 6px;
+			left: 4.5px;
+		}
+		.settings-cog {
+			transition: all 200ms;
+		}
+		.settings-cog > img[alt="Settings"] {
+			width: inherit;
+			height: inherit;
+			position: relative;
+			top: 0;
+			left: 0;
+			background: #3C3957;
+			width: 3vmax;
+			height: 3vmax;
+			position: absolute;
+			top: 0;
+			left: 0;
+			border-radius: 2em;
+			border: solid 3px #6C6889;
+			display: inline-block;
+			cursor: pointer;
+			transition: all 150ms;
+			z-index: 69;
+			justify-content: space-evenly;
+		}
+		.settings-cog:active {
+			background: #605C7C;
+		}
+		.settings-menu {
+			color: rgb(245, 245, 245);
+			transition: all 425ms !important;
+			opacity: 1;
+		}
+		.emojis-panel-parent {
+			position: absolute;
+			top: 0;
+			left: 0;
+			display: none;
+			width: 45%;
+			height: 55%;
+			overflow: scroll;
+			background: #333333;
+			resize: both;
+			max-width: 93%;
+			max-height: 90%;
+			min-width: 14%;
+			min-height: 40%;
+		}
+		.emojis-panel > img {
+			width: 64px;
+			height: 64px;
+			filter: brightness(0.5);
+			transition: all 250ms;
+			cursor: pointer;
+		}
+		.emojis-panel > img:hover {
+			filter: brightness(1);
+			border-radius: 1em;
+		}
+		.emojis-panel-toggle {
+			position: absolute;
+			bottom: -2px;
+			left: calc(2px + 88%);
+			filter: invert(100%);
+			transition: all 200ms;
+			cursor: pointer;
+		}
+		.emojis-panel-toggle:hover {
+			filter: invert(75%);
+		}
+		.emojis-panel-toggle:active {
+			filter: invert(55%);
+		}
+		.message-input-file {
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		.emoji-size-input {
+			position: fixed;
+			bottom: 10%;
+			right: 8%;
+		}
+		#gif-container {
+			position: absolute;
+			top: 0;
+			left: 0;
+			display: none;
+			width: 45%;
+			height: 55%;
+			overflow: scroll;
+			background: #333333;
+			resize: both;
+			max-width: 50%;
+			max-height: 70%;
+			min-width: 14%;
+			min-height: 40%;
+		}
+		#gif-container > img {
+			max-width: 128px;
+			height: auto;
+		}
+		.gif-toggle {
+			position: absolute;
+			bottom: -2px;
+			left: calc(2px + 82%);
+			filter: invert(100%);
+			transition: all 200ms;
+			cursor: pointer;
+		}
+		.gif-toggle:hover {
+			filter: invert(75%);
+		}
+		.gif-toggle:active {
+			filter: invert(55%);
+		}
+		.top-toggle-bar {
+			position: absolute;
+			top: 60px;
+		}
+		.spotify-display {
+			position: absolute;
+			top: 0;
+			left: 0;
+			padding-left: 3%;
+			width: 92%;
+			height: 50px;
+			border: solid 2px #fff;
+			background-clip: border-box;
+			border-radius: .5em;
+			color: #fff;
+			backdrop-filter: blur(25px);
+			user-select: none;
+		}
+		.spotify-display > div.parent1 > img {
+			position: relative;
+			top: 6px;
+			left: 8px;
+		}
+		.spotify-display > div.parent1:not(img) {
+			display: flex;
+			flex-direction: column;
+		}
+		.spotify-display >div.parent1> span {
+			position: relative;
+			top: -30px;
+			left: 45px;
+			font-size: 14px;
+		}
+		.spotify-display > .parent2 > span {
+			position: relative;
+			left: -1%;
+			top: -75px;
+			text-align: right;
+		}
+		.spotify-display > .parent2 {
+			display: flex;
+			flex-direction: column;
+		}
+		.spotify-display > span {
+			position: relative;
+			top: 6px;
+			left: 8px;
+			font-size: 20px;
+		}
+		.spotify-failed {
+			color: #B80000;
+			font-weight: bolder;
+			text-shadow: 0px 0px 8px #640000;
+		}
+		.spotify-seek-range {
+			-webkit-appearance: none;
+			display: none;
+			position: relative;
+			left: 30%;
+			top: 20px;
+			transform: translateY(-50%);
+			cursor: default;
+			border-radius: 1em;
+			height: 6px;
+			background-color: #009A00;
+			width: 50%;
+		}
+		.spotify-seek-range-container {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 86%;
+		}
+		.spotify-seek-range::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			height: 15px;
+			width: 20px;
+			background-color: #00F600;
+			border-radius: 0.5em;
+			box-shadow: 0px 0px 10px #001F00;
+		}
+		.spotify-icon {
+			position: absolute;
+			left: 0.75%;
+			top: 8px;
+			pointer-events: none;
+			cursor: default;
+		}
+		.spotify-track-name {
+			font-weight: bolder;
+		}
+		.spotify-seek-range:active {
+			cursor: not-allowed;
+		}
+	</style>
+</head>
+<body>
+	<div id="guild-sidebar"></div>
+	<div id="guild-channels-sidebar"></div>
+		<div id="message-username-popup"></div>
+	<div id="message-container">
+	</div>
+	<div class="spotify-container">
+		<div class="spotify-display">
+			<span class="spotify-unauthenticated">Unauthenticated.</span>
+		</div>
+		<div class="spotify-seek-range-container">
+			<input type="range" class="spotify-seek-range" max="100" value="0" disabled>
+		</div>
+		<img src="https://cdn-icons-png.flaticon.com/512/174/174872.png" alt="" class="spotify-icon" width="32" height="32">
+	</div>
+	<div class="top-toggle-bar">
+		<div class="settings-cog">
+			<img src="https://i.imgur.com/fl06CPI.png" alt="Settings">
+		</div>
+	</div>
+	<div class="settings-menu" style="position: absolute; left: -400px; top: 0; user-select: none; z-index: 69;">
+		<div style="display: flex; font-size: 24px !important;">
+			<span>Settings</span>
+			<i onclick="document.querySelector('.settings-menu').style.left = '-500px'; document.querySelector('.settings-cog').style.opacity = '1'" style="cursor: pointer">×</i>
+		</div>
+		<select class="rpc-input-value">
+			<option value="niagr">Select RPC type</option>
+			<option value="play">Playing</option>
+			<option value="stream">Streaming</option>
+			<option value="listen">Listening</option>
+			<option value="watch">Watching</option>
+			<option value="compete">Competing</option>
+			<option value="clear">Clear RPC</option>
+		</select>
+		<input type="text" placeholder="RPC" class="rpc-input">
+		<br>
+		<button class="confirm-rpc">Confirm RPC</button>
+	</div>
+	<div class="emojis-panel-parent">
+		<select class="emoji-size-input" oninput="socket.emit('emoji size change', this.value)">
+			<option value="48">Enter size</option>
+			<option value="128">Large (128)</option>
+			<option value="48">Medium (48)</option>
+			<option value="32">Small (32)</option>
+		</select>
+		<div class="emojis-panel">
+		</div>
+	</div>
+	<div id="gif-container"></div>
+	<!-- <div class="user-details-box">
+		<h1>hello world</h1>
+	</div> -->
+	<input type="text" id="message-input" placeholder="Send messages...">
+	<img src="https://www.svgrepo.com/show/501012/smile.svg" width="72" height="72" class="emojis-panel-toggle">
+	<img src="https://www.svgrepo.com/show/310879/gif.svg" alt="" width="72" height="72" class="gif-toggle">
+	<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+	<script>
+		let socket = io();
+		socket.on("tenor api key", (e) => {
+			tenorKey = e;
+		})
+		let tenorKey = "";
+		let activeguildID = "";
+		let activeUID = ""
+		function clearTag(selector) {
+		  const parentElement = document.querySelector(selector);
+
+		  if (parentElement) {
+			while (parentElement.firstChild) {
+			  parentElement.removeChild(parentElement.firstChild);
+			}
+		  } else {
+			console.error(`QuerySelector "${selector}" does not exist in document.`);
+		  }
+		}
+		function scrollToBottom(e) {
+			const element = document.getElementById(e);
+			if (element) {
+				element.scrollTop = element.scrollHeight;
+			}
+		}
+		let linebreak = document.createElement("br");
+		socket.emit("get guilds")
+		socket.on("new guild", (e) => {
+			const node = document.createElement("img");
+			node.title = e[2];
+			node.setAttribute("draggable", "false");
+			node.setAttribute("guildID", e[0]);
+			node.onclick = function() {
+				socket.emit("fetch messages", this.getAttribute("guildID"));
+				activeguildID = this.getAttribute("guildID");
+				socket.emit("get emojis", activeguildID)
+				clearTag(".emojis-panel")
+				clearTag("#message-container")
+			};
+			if (e[1]) {
+				node.src = `https://cdn.discordapp.com/icons/${e[0]}/${e[1]}.png`;
+				document.getElementById("guild-sidebar").appendChild(node)
+			} else {
+				node.src = "https://i.imgur.com/Sc01cAe.png";
+				document.getElementById("guild-sidebar").appendChild(node)
+			}
+			activeUID = e[3];
+		})
+		socket.on("append to messages", (e) => {
+		if (Array.isArray(e)) {
+			const node1 = document.createElement("div");
+			const node4 = document.createElement("div");
+			node1.textContent = e[0] ? `${e[0]}` : `${e[2]}`;
+			node1.classList.add("messageUsername");
+			const node2 = document.createElement("div");
+			node2.textContent = `${e[1]}`;
+			node2.classList.add("messageTextContent");
+			if (e.length >= 3) {
+				node1.setAttribute("username", e[2]);
+				console.log(e[5])
+				node1.addEventListener("mouseenter", (event) => {
+					const mouseX = event.clientX;
+					const mouseY = event.clientY;
+					const popup = document.getElementById("message-username-popup");
+					popup.innerText = node1.getAttribute("username");
+					popup.style.top = `${mouseY}px`;
+					popup.style.left = `${mouseX}px`;
+					popup.style.opacity = "1";
+					popup.style.display = "block";
+				});
+				node1.addEventListener("mouseleave", () => {
+					const popup = document.getElementById("message-username-popup");
+					popup.style.opacity = "0";
+				});
+			}
+			const node3 = document.createElement("div");
+			node1.setAttribute("userid", e[3]);
+			node1.onclick = () => {
+				document.getElementById("message-input").value += `<@${node1.getAttribute("userid")}> `;
+			}
+			node3.classList.add("message");
+			node4.classList.add("message-delimiter");
+			node1.oncontextmenu = (e) => {
+				e.preventDefault();
+			}
+			node2.setAttribute("messageid", e[4]);
+			node4.textContent = ":";
+			node3.appendChild(node1);
+			node3.appendChild(node4);
+			node3.appendChild(node2);
+			document.getElementById("message-container").appendChild(node3);
+			scrollToBottom("message-container");
+			}
+			if (e[6]) {
+				console.log(e[6])
+			}
+		});
+		document.getElementById("message-input").addEventListener("keydown", (e) => {
+			if (e.key === "Enter") {
+				socket.emit("send message as user", [document.getElementById("message-input").value, activeguildID])
+			}
+		})
+		socket.on("clear input", () => {
+			document.getElementById("message-input").value = "";
+		})
+		socket.on("delete message", (e) => {
+			const messageContainers = document.getElementsByClassName("message");
+			for (const container of messageContainers) {
+				const messageTextContent = container.querySelector(".messageTextContent");
+				if (messageTextContent && messageTextContent.getAttribute("messageid") === e) {
+					const node = document.createElement("div");
+					node.textContent = "→ deleted"
+					node.classList.add("messagelogger-status-deleted")
+					container.appendChild(node);
+				}
+			}
+		});
+		socket.on("edit message", (e) => {
+			const messageContainer = document.getElementsByClassName("message");
+			for (const container of messageContainer) {
+				const messageTextContent = container.querySelector(".messageTextContent");
+				if (messageTextContent && messageTextContent.getAttribute("messageid") === e[0]) {
+					const node = document.createElement("div");
+					node.textContent = `→`
+					node.classList.add("messagelogger-status-edited")
+					const node1 = document.createElement("div");
+					node1.textContent = `${e[1]}`;
+					messageTextContent.classList.remove("messageTextContent");
+					node1.classList.add("messageTextContent");
+					node1.setAttribute("messageid", e[0])
+					messageTextContent.classList.add("messagelogger-old-message")
+					container.appendChild(node);
+					container.appendChild(node1);
+				}
+			}
+		});
+		document.addEventListener("contextmenu", (e) => {
+			e.preventDefault()
+		})
+		document.querySelector(".settings-cog").addEventListener("click", (e) => {
+			document.querySelector(".settings-menu").style.left = "0";
+			document.querySelector('.settings-cog').style.opacity = '0';
+		})
+		document.querySelector(".confirm-rpc").addEventListener("click", () => {
+			socket.emit('set rpc', [document.querySelector('.rpc-input-value').value, document.querySelector('.rpc-input').value])
+		})
+		socket.on("new emoji", (e) => {
+			const node = document.createElement("img")
+			node.src = e[0];
+			node.onclick = () => {
+				document.querySelector("#message-input").value += ` :${e[1]}:`
+				document.querySelector("#message-input").focus()
+			}
+			node.title = e[1]
+			document.querySelector(".emojis-panel").appendChild(node);
+		})
+
+		let panelOpen = false;
+
+		document.querySelector(".emojis-panel-toggle").addEventListener("click", () => {
+			document.querySelector(".emojis-panel-parent").style.display === "none" ? document.querySelector(".emojis-panel-parent").style.display = "block" : document.querySelector(".emojis-panel-parent").style.display = "none";
+		});
+		document.querySelector(".gif-toggle").addEventListener("click", () => {
+			document.querySelector("#gif-container").style.display === "none" ? document.querySelector("#gif-container").style.display = "block" : document.querySelector("#gif-container").style.display = "none";
+		});
+
+		async function searchgifs(keyword, limit) {
+			if (tenorKey) {
+				try {
+					const apiUrl = `https://api.tenor.com/v1/search?q=${keyword}&key=${tenorKey}&limit=${limit}`;
+
+					const response = await fetch(apiUrl);
+					const data = await response.json();
+
+					if (!data || !data.results || data.results.length === 0) {
+						throw new Error('No GIFs found on search.');
+					}
+
+					data.results.forEach((gif, i) => {
+						const img = document.createElement('img');
+						img.src = gif.media[0].gif.url;
+						img.alt = `GIF ${i + 1}`;
+						img.onclick = () => {
+							document.querySelector("#message-input").value += img.src + " ";
+							document.querySelector("#message-input").focus();
+						};
+						document.getElementById('gif-container').appendChild(img);
+					});
+				} catch (error) {
+					console.error(error);
+				}
+			}
+		}
+		searchgifs("cat", 15);
+		socket.on("spotify update status", (e) => {
+			clearTag(".spotify-display")
+			const parent = document.createElement("div");
+			const parent2 = document.createElement("div");
+			const cover = document.createElement("img");
+			cover.src = e[4];
+			cover.width = "32";
+			cover.height = "32";
+			const trackName = document.createElement("span")
+			trackName.textContent = e[0]
+			trackName.classList.add("spotify-track-name")
+			const artistName = document.createElement("span")
+			artistName.textContent = `by ${e[1]}`
+			artistName.classList.add("spotify-artist-name")
+			const seekPos = document.createElement("span")
+			seekPos.textContent = new Date(e[2]).toISOString().substr(14, 5);
+			seekPos.classList.add("spotify-seek-position")
+			const maxSeekPos = document.createElement("span");
+			maxSeekPos.textContent = new Date(e[3]).toISOString().substr(14, 5);
+			maxSeekPos.classList.add("spotify-max-seek-position")
+			document.querySelector(".spotify-seek-range").style.display = "block";
+			document.querySelector(".spotify-seek-range").value = e[2];
+			document.querySelector(".spotify-seek-range").max = e[3];
+			parent.appendChild(cover)
+			parent.appendChild(trackName)
+			parent.appendChild(artistName)
+			parent2.appendChild(seekPos)
+			parent2.appendChild(maxSeekPos)
+			parent.classList.add("parent1")
+			parent2.classList.add("parent2")
+			document.querySelector(".spotify-display").appendChild(parent)
+			document.querySelector(".spotify-display").appendChild(parent2)
+		})
+		socket.on("spotify no tracks playing", () => {
+			clearTag(".spotify-display")
+			const node = document.createElement("span");
+			node.textContent = "No tracks playing."
+			document.querySelector(".spotify-display").appendChild(node)
+			document.querySelector(".spotify-seek-range").style.display = "none";
+		})
+		socket.on("spotify integration error", () => {
+			clearTag(".spotify-display")
+			const node = document.createElement("span");
+			node.classList.add("spotify-failed")
+			node.textContent = "Spotify integration failed."
+			document.querySelector(".spotify-display").appendChild(node)
+			document.querySelector(".spotify-seek-range").style.display = "none";
+		})
+		socket.on("spotify-authenticated", () => {
+			document.querySelector(".spotify-unauthenticated").innerText = "No tracks playing."
+		})
+		setInterval(() => {
+			socket.emit("get spotify status")
+		}, 100)
+	</script>
+</body>
+</html>
