@@ -26,7 +26,7 @@ app.get('/spotify', (req, res) => {
 	res.redirect(authUrl);
 })
 
-app.get('/spotify-auth-success', (req, res) => {
+app.get('/callback', (req, res) => {
 	const code = req.query.code;
 	axios({
 		method: 'post',
