@@ -5,7 +5,9 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const path = require('path');
+const cors = require('cors');
+app.use(cors());
+// const path = require('path');
 const axios = require("axios")
 require('dotenv').config()
 
@@ -28,6 +30,7 @@ app.get('/spotify', (req, res) => {
 
 app.get('/callback', (req, res) => {
 	const code = req.query.code;
+	res.sendFile(__dirname + '/index.html');
 	axios({
 		method: 'post',
 		url: 'https://accounts.spotify.com/api/token',
@@ -70,7 +73,6 @@ app.get('/callback', (req, res) => {
 				io.emit("spotify integration error")
 			});
 		}, 950);
-		res.sendFile(__dirname + '/index.html');
 	}).catch(error => {
 		console.error(error.response ? error.response.data : error.message);
 		res.status(500).send(`<title>Walter Client - Renavigation</title>Please click <a href="http://localhost:${port}">here</a> to access Walter client.`);
@@ -83,7 +85,7 @@ const client = new Client({
 })
 
 server.listen(port, () => {
-	console.log(`Please go to localhost:${port} on your browser after client is ready`)
+	console.log(`server running: localhost:${port}`)
 });
 
 let activeGuild;
