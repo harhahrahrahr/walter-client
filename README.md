@@ -19,3 +19,7 @@
 ### With Spotify & Tenor API integration
 
 1. I can't write an informative readme, but instructions coming soon
+
+### Misc. Info
+
+UI might not be good, but after each commit, I hope it gets better.
