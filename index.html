@@ -662,11 +662,15 @@
 			document.querySelector(".spotify-display").appendChild(node)
 			document.querySelector(".spotify-seek-range").style.display = "none";
 		})
+		let authSpotify = false;
 		socket.on("spotify-authenticated", () => {
+			authSpotify = true;
 			document.querySelector(".spotify-unauthenticated").innerText = "No tracks playing."
 		})
 		setInterval(() => {
-			socket.emit("get spotify status")
+			if (authSpotify) {
+				socket.emit("get spotify status")
+			}
 		}, 100)
 	</script>
 </body>
